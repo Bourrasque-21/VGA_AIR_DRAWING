@@ -1,16 +1,14 @@
 `timescale 1ns / 1ps
 
 //================================================================================
-//  Module Name : centroid_accum
-//  Description : 초록색 마커 펜의 무게중심(Center of Gravity) 검출 모듈
+//  Module Name : bbox_center_accum
+//  Description : 초록색 마커 펜의 Bounding Box 중심 검출 모듈
 //  
 //  [하드웨어 최적화 & 동작 원리]
 //  1. Bounding Box (BBox) 방식 채택:
-//     - 픽셀들의 평균 위치를 실시간 가변 나누기(/count)로 구현하면 거대한 나눗셈기가
-//       추론되어 타이밍 에러(Timing Violation)를 유발합니다.
-//     - 이를 우회하기 위해 프레임 내 검출된 픽셀의 상하좌우 최소/최대값(BBox)만 추적하고,
-//       프레임 끝(VSYNC 상승엣지)에서 (min + max) >> 1 (오른쪽 1비트 시프트) 연산으로
-//       나눗셈 없이 초고속으로 무게중심을 구합니다.
+//     - 프레임 내 검출된 픽셀의 상하좌우 최소/최대값만 추적하고,
+//       프레임 끝(VSYNC 상승엣지)에서 (min + max) >> 1 연산으로 BBox 중심을 구합니다.
+//     - 검출 픽셀 전체의 평균을 구하는 실제 무게중심 연산과는 구분됩니다.
 //
 //  2. 1D Erosion (침식) 필터 내장 (소금 노이즈 차단):
 //     - BBox 방식의 약점은 단 1픽셀짜리 미세 잡음광에도 경계선이 크게 늘어난다는 점입니다.
@@ -21,7 +19,7 @@
 //     - minx + maxx 합산 시 9비트 한계인 511을 초과하는 520(우측 화면 경계) 등의 상황에서
 //       잘려 나가지 않도록 10비트 제로 확장 덧셈을 구현하여 우측 터치 차단 버그를 수정했습니다.
 //================================================================================
-module centroid_accum #(
+module bbox_center_accum #(
     parameter int PEN_MIN = 15,   // 마커로 인정할 최소 검출 픽셀 개수
     parameter bit ERODE   = 1'b1  // 1 = 가로 연속 3픽셀 검출 필터 활성화
 ) (
@@ -43,6 +41,7 @@ module centroid_accum #(
     wire         vs_rise  = vsync & ~vsync_d;  // VSYNC의 라이징 엣지 검출 (프레임 캡처 종료 시점)
     wire         line_end = (x == 9'd319);     // 가로 끝 도달
     wire         eff_hit  = ERODE ? (hit & hit_d1 & hit_d2) : hit; // 3픽셀 연속 감지 조건
+    wire [8:0]   eff_x    = ERODE ? (x - 9'd1) : x; // 3픽셀 윈도우의 중앙 X 좌표
 
     always_ff @(posedge pclk) begin
         vsync_d <= vsync;
@@ -82,8 +81,8 @@ module centroid_accum #(
             // 잡음 침식(Erosion) 필터를 무사히 통과한 유효 픽셀만 BBox 경계선 갱신에 참여
             if (eff_hit) begin
                 cnt <= cnt + 17'd1;
-                if (x < minx) minx <= x;
-                if (x > maxx) maxx <= x;
+                if (eff_x < minx) minx <= eff_x;
+                if (eff_x > maxx) maxx <= eff_x;
                 if (y < miny) miny <= y;
                 if (y > maxy) maxy <= y;
             end
@@ -115,10 +114,10 @@ endmodule
 //================================================================================
 module coord_filter (
     input  logic       pclk,       // 카메라 픽셀 클럭 (프레임 속도와 동기)
-    input  logic       valid,      // centroid_accum 로부터 새로운 좌표가 들어왔음을 알리는 동기 스트로브
-    input  logic [8:0] cx,         // centroid_accum 이 찾은 이번 프레임의 원시 X 좌표
-    input  logic [8:0] cy,         // centroid_accum 이 찾은 이번 프레임의 원시 Y 좌표
-    input  logic       pen_in,     // centroid_accum 에 의해 검출된 이번 프레임의 펜 상태
+    input  logic       valid,      // bbox_center_accum 로부터 새로운 좌표가 들어왔음을 알리는 동기 스트로브
+    input  logic [8:0] cx,         // bbox_center_accum 이 찾은 이번 프레임의 원시 X 좌표
+    input  logic [8:0] cy,         // bbox_center_accum 이 찾은 이번 프레임의 원시 Y 좌표
+    input  logic       pen_in,     // bbox_center_accum 에 의해 검출된 이번 프레임의 펜 상태
     output logic [8:0] ax,         // 최종 평활화(이동평균) 처리가 완료된 X 좌표
     output logic [8:0] ay,         // 최종 평활화(이동평균) 처리가 완료된 Y 좌표
     output logic       pen,        // 지연 시간 보정 처리가 들어간 최종 펜 상태

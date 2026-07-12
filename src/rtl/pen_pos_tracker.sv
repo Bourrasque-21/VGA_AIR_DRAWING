@@ -1,3 +1,10 @@
+/*
+ * 비활성 레거시 모듈
+ *
+ * 현재 설계는 pen_filter.sv의 bbox_center_accum과 coord_filter를 사용합니다.
+ * 이 모듈은 마지막으로 검출된 녹색 픽셀 좌표만 저장하는 이전 구현이며,
+ * 합성 경로에서 인스턴스되지 않으므로 참고용으로만 보관합니다.
+ *
 `timescale 1ns / 1ps
 
 module pen_pos_tracker (
@@ -94,3 +101,4 @@ module pen_pos_tracker (
     end
 
 endmodule
+*/

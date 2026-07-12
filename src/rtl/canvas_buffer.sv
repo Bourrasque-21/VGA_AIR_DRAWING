@@ -3,7 +3,7 @@ module canvas_buffer_top (
     input  logic                       vsync,        // 카메라 프레임 vsync
     input  logic [                2:0] sw_pen_color, // 외부 스위치 색상 조합
     input  logic                       sw_eraser,     // 지우개 스위치
-    input  logic                       sw_size,       // 브러시 두께 조절 스위치
+    input  logic                       sw_size,       // 펜/지우개 두께 조절 스위치
 
     // wrtie side
     input  logic                       wclk,
@@ -41,11 +41,11 @@ module canvas_buffer_top (
         .green_detected(green_detected)
     );
 
-    // 2. 무게중심 BBox 연산기 모듈 (나눗셈 제거 + Erosion 잡음 제거)
-    centroid_accum #(
+    // 2. BBox 중심 연산기 모듈 (나눗셈 제거 + Erosion 잡음 제거)
+    bbox_center_accum #(
         .PEN_MIN (15),
         .ERODE   (1'b1)
-    ) U_centroid_accum (
+    ) U_bbox_center_accum (
         .pclk (wclk),
         .vsync(vsync),
         .we   (we),
