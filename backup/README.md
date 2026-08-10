@@ -1,4 +1,4 @@
-# AVG VGA Draw Project Sources
+# VGA Draw Project Sources
 
 ## 📂 폴더 구조 (Directory Structure)
 
