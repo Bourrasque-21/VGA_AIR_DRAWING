@@ -1,0 +1,1574 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Full Frame Vs Line Ring</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;max-width:1800px;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="Full Frame Vs Line Ring" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;Full Frame Vs Line Ring&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(--background) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: light-dark(rgb(255 255 255), rgb(24 24 24));
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 12.5px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--viz-font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: superellipse(1.5);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: superellipse(1.5);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed=&quot;true&quot;],
+    [aria-selected=&quot;true&quot;],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;line-ring-explainer-v4&quot; class=&quot;viz-root&quot;&gt;
+  &lt;style&gt;
+    #line-ring-explainer-v4 {
+      --bg: var(--background);
+      --fg: var(--foreground);
+      --muted: var(--muted-foreground);
+      --border-c: var(--border);
+      --panel: var(--card);
+      --write: var(--viz-series-1);
+      --read: var(--viz-series-2);
+      --meta: var(--viz-series-5);
+      --screen-a: color-mix(in srgb, var(--viz-series-3) 36%, var(--card));
+      --screen-b: color-mix(in srgb, var(--viz-series-4) 36%, var(--card));
+      color: var(--fg);
+      font-family: var(--font-sans);
+      width: 100%;
+      max-width: 1700px;
+      margin: 0 auto;
+    }
+    #line-ring-explainer-v4 * { box-sizing: border-box; }
+    #line-ring-explainer-v4 .controls {
+      display: grid;
+      grid-template-columns: auto minmax(230px, 1fr) minmax(200px, .8fr);
+      gap: 14px;
+      align-items: end;
+      padding: 14px;
+      border: 1px solid var(--border-c);
+      border-radius: 10px;
+      background: var(--panel);
+    }
+    #line-ring-explainer-v4 .status {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    #line-ring-explainer-v4 .viz-badge {
+      display: inline-flex;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--primary) 16%, transparent);
+      color: var(--fg);
+      font-size: 12px;
+    }
+    #line-ring-explainer-v4 .diagram {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-top: 14px;
+      border: 1px solid var(--border-c);
+      border-radius: 10px;
+      background: var(--bg);
+    }
+    #line-ring-explainer-v4 svg text {
+      fill: var(--fg);
+      font-family: var(--font-sans);
+      font-size: 15px;
+    }
+    #line-ring-explainer-v4 svg .small { font-size: 12px; fill: var(--muted); }
+    #line-ring-explainer-v4 svg .tiny { font-size: 10px; fill: var(--muted); }
+    #line-ring-explainer-v4 svg .strong { font-weight: 700; }
+    #line-ring-explainer-v4 svg .title { font-size: 21px; font-weight: 800; }
+    #line-ring-explainer-v4 svg .subtitle { font-size: 17px; font-weight: 700; }
+    #line-ring-explainer-v4 svg .panel {
+      fill: var(--panel);
+      stroke: var(--border-c);
+      stroke-width: 1.5;
+    }
+    #line-ring-explainer-v4 svg .screen {
+      fill: color-mix(in srgb, var(--card) 82%, var(--background));
+      stroke: var(--border-c);
+      stroke-width: 1.5;
+    }
+    #line-ring-explainer-v4 svg .screen-a { fill: var(--screen-a); stroke: var(--viz-series-3); stroke-width: 2; }
+    #line-ring-explainer-v4 svg .screen-b { fill: var(--screen-b); stroke: var(--viz-series-4); stroke-width: 2; }
+    #line-ring-explainer-v4 svg .bank {
+      fill: color-mix(in srgb, var(--card) 76%, var(--background));
+      stroke: var(--border-c);
+      stroke-width: 1;
+    }
+    #line-ring-explainer-v4 svg .bank-write,
+    #line-ring-explainer-v4 svg .fifo-push { fill: var(--write); stroke: color-mix(in srgb, var(--write) 70%, white); stroke-width: 2; }
+    #line-ring-explainer-v4 svg .bank-read,
+    #line-ring-explainer-v4 svg .fifo-pop { fill: var(--read); stroke: color-mix(in srgb, var(--read) 70%, white); stroke-width: 2; }
+    #line-ring-explainer-v4 svg .fifo-cell {
+      fill: color-mix(in srgb, var(--meta) 25%, var(--card));
+      stroke: var(--border-c);
+      stroke-width: 1;
+    }
+    #line-ring-explainer-v4 svg .write-line { stroke: var(--write); stroke-width: 4; }
+    #line-ring-explainer-v4 svg .read-line { stroke: var(--read); stroke-width: 4; }
+    #line-ring-explainer-v4 svg .header { fill: var(--meta); stroke: color-mix(in srgb, var(--meta) 70%, white); stroke-width: 1; }
+    #line-ring-explainer-v4 svg .divider { stroke: var(--border-c); stroke-width: 1; }
+    #line-ring-explainer-v4 svg .arrow { fill: none; stroke: var(--muted); stroke-width: 3; marker-end: url(#lr4-arrow); }
+    #line-ring-explainer-v4 svg .data-arrow { fill: none; stroke: var(--read); stroke-width: 4; marker-end: url(#lr4-arrow-read); }
+    #line-ring-explainer-v4 svg .write-arrow { fill: none; stroke: var(--write); stroke-width: 4; marker-end: url(#lr4-arrow-write); }
+    #line-ring-explainer-v4 svg .meta-arrow { fill: none; stroke: var(--meta); stroke-width: 4; marker-end: url(#lr4-arrow-meta); }
+    #line-ring-explainer-v4 svg .bar-bg { fill: color-mix(in srgb, var(--muted-foreground) 15%, transparent); }
+    #line-ring-explainer-v4 svg .bar-full { fill: var(--viz-series-3); }
+    #line-ring-explainer-v4 svg .bar-ring { fill: var(--write); }
+    #line-ring-explainer-v4 svg .bar-canvas { fill: var(--read); }
+    @media (max-width: 760px) {
+      #line-ring-explainer-v4 .controls { grid-template-columns: 1fr; }
+      #line-ring-explainer-v4 .status { grid-column: 1; }
+    }
+  &lt;/style&gt;
+
+  &lt;div class=&quot;controls&quot;&gt;
+    &lt;button id=&quot;lr4-play&quot; type=&quot;button&quot; class=&quot;btn btn-primary&quot;&gt;▶ 흐름 재생&lt;/button&gt;
+    &lt;label class=&quot;form-label&quot; for=&quot;lr4-row&quot;&gt;현재 카메라 row &lt;span id=&quot;lr4-row-value&quot;&gt;304&lt;/span&gt;
+      &lt;input id=&quot;lr4-row&quot; class=&quot;form-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;479&quot; value=&quot;304&quot;&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;form-label&quot; for=&quot;lr4-speed&quot;&gt;재생 속도 &lt;span id=&quot;lr4-speed-value&quot;&gt;8&lt;/span&gt; rows/s
+      &lt;input id=&quot;lr4-speed&quot; class=&quot;form-range&quot; type=&quot;range&quot; min=&quot;1&quot; max=&quot;20&quot; value=&quot;8&quot;&gt;
+    &lt;/label&gt;
+    &lt;div class=&quot;status&quot; aria-live=&quot;polite&quot;&gt;
+      &lt;span id=&quot;lr4-write-status&quot; class=&quot;viz-badge&quot;&gt;WRITE row 304 → bank 48&lt;/span&gt;
+      &lt;span id=&quot;lr4-fifo-status&quot; class=&quot;viz-badge&quot;&gt;descriptor FIFO 24 / 64&lt;/span&gt;
+      &lt;span id=&quot;lr4-read-status&quot; class=&quot;viz-badge&quot;&gt;READ row 281 ← bank 25&lt;/span&gt;
+      &lt;span id=&quot;lr4-vga-status&quot; class=&quot;viz-badge&quot;&gt;VGA 전송 화면 B · rows 82, 83&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;svg class=&quot;diagram&quot; viewBox=&quot;0 0 1450 3390&quot; role=&quot;img&quot; aria-labelledby=&quot;lr4-title lr4-desc&quot;&gt;
+    &lt;title id=&quot;lr4-title&quot;&gt;카메라 원본부터 링버퍼, descriptor FIFO, VGA 전송 화면 A와 B, Python 완성 프레임까지의 연속 흐름&lt;/title&gt;
+    &lt;desc id=&quot;lr4-desc&quot;&gt;640×480 카메라의 한 row data가 64-row 링버퍼의 bank 하나에 저장된다. 영상 pixel은 bank에 남고 descriptor FIFO에는 카메라 row data와 bank 번호가 들어간다. line streamer는 FIFO를 POP하고 해당 bank의 RGB444 pixel 640개를 읽어 연속된 VGA row data로 출력한다. VGA 화면 A는 카메라 rows 0부터 239, 화면 B는 240부터 479를 운반하고 Python은 21-pixel header의 카메라 row data로 640×480 frame을 조립한다.&lt;/desc&gt;
+    &lt;defs&gt;
+      &lt;marker id=&quot;lr4-arrow&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;7&quot; markerHeight=&quot;7&quot; orient=&quot;auto&quot;&gt;
+        &lt;path d=&quot;M0,0 L10,5 L0,10 z&quot; fill=&quot;var(--muted-foreground)&quot;&gt;&lt;/path&gt;
+      &lt;/marker&gt;
+      &lt;marker id=&quot;lr4-arrow-read&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;7&quot; markerHeight=&quot;7&quot; orient=&quot;auto&quot;&gt;
+        &lt;path d=&quot;M0,0 L10,5 L0,10 z&quot; fill=&quot;var(--viz-series-2)&quot;&gt;&lt;/path&gt;
+      &lt;/marker&gt;
+      &lt;marker id=&quot;lr4-arrow-write&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;7&quot; markerHeight=&quot;7&quot; orient=&quot;auto&quot;&gt;
+        &lt;path d=&quot;M0,0 L10,5 L0,10 z&quot; fill=&quot;var(--viz-series-1)&quot;&gt;&lt;/path&gt;
+      &lt;/marker&gt;
+      &lt;marker id=&quot;lr4-arrow-meta&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;9&quot; refY=&quot;5&quot; markerWidth=&quot;7&quot; markerHeight=&quot;7&quot; orient=&quot;auto&quot;&gt;
+        &lt;path d=&quot;M0,0 L10,5 L0,10 z&quot; fill=&quot;var(--viz-series-5)&quot;&gt;&lt;/path&gt;
+      &lt;/marker&gt;
+    &lt;/defs&gt;
+
+    &lt;text x=&quot;50&quot; y=&quot;42&quot; class=&quot;title&quot;&gt;카메라 한 프레임이 Python의 640×480 화면이 되기까지&lt;/text&gt;
+    &lt;text x=&quot;50&quot; y=&quot;70&quot; class=&quot;small&quot;&gt;파랑 = 카메라 WRITE/PUSH · 주황 = VGA READ/POP · 보라 = 픽셀이 아닌 descriptor/header&lt;/text&gt;
+
+    &lt;text x=&quot;40&quot; y=&quot;118&quot; class=&quot;subtitle&quot;&gt;1. 카메라 원본 640 columns × 480 rows&lt;/text&gt;
+    &lt;rect x=&quot;40&quot; y=&quot;140&quot; width=&quot;400&quot; height=&quot;300&quot; rx=&quot;7&quot; class=&quot;screen&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;40&quot; y=&quot;140&quot; width=&quot;400&quot; height=&quot;150&quot; class=&quot;screen-a&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;40&quot; y=&quot;290&quot; width=&quot;400&quot; height=&quot;150&quot; class=&quot;screen-b&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;240&quot; y=&quot;215&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;상반부 · source rows 0…239&lt;/text&gt;
+    &lt;text x=&quot;240&quot; y=&quot;365&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;하반부 · source rows 240…479&lt;/text&gt;
+    &lt;line id=&quot;lr4-camera-write-line&quot; x1=&quot;40&quot; y1=&quot;330&quot; x2=&quot;440&quot; y2=&quot;330&quot; class=&quot;write-line&quot;&gt;&lt;/line&gt;
+    &lt;line id=&quot;lr4-camera-read-line&quot; x1=&quot;40&quot; y1=&quot;316&quot; x2=&quot;440&quot; y2=&quot;316&quot; class=&quot;read-line&quot;&gt;&lt;/line&gt;
+    &lt;text id=&quot;lr4-camera-write-label&quot; x=&quot;40&quot; y=&quot;474&quot; class=&quot;strong&quot;&gt;WRITE row 304 · col 0…639&lt;/text&gt;
+    &lt;text id=&quot;lr4-camera-read-label&quot; x=&quot;40&quot; y=&quot;502&quot; class=&quot;strong&quot;&gt;READ row 281 · col 0…639&lt;/text&gt;
+    &lt;text x=&quot;40&quot; y=&quot;530&quot; class=&quot;small&quot;&gt;row 1개 = 가로 640 pixels · 입력 좌표는 row, col로 표시&lt;/text&gt;
+
+    &lt;path d=&quot;M455 290 H495&quot; class=&quot;write-arrow&quot;&gt;&lt;/path&gt;
+    &lt;text x=&quot;475&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;small&quot;&gt;RGB565&lt;/text&gt;
+
+    &lt;rect x=&quot;500&quot; y=&quot;105&quot; width=&quot;910&quot; height=&quot;580&quot; rx=&quot;10&quot; class=&quot;panel&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;530&quot; y=&quot;138&quot; class=&quot;subtitle&quot;&gt;2. 64-row 링버퍼&lt;/text&gt;
+    &lt;text x=&quot;530&quot; y=&quot;164&quot; class=&quot;small&quot;&gt;bank: 카메라 row data 1줄 보관 · 저장 data: RGB444 pixel 640개&lt;/text&gt;
+    &lt;g id=&quot;lr4-banks&quot;&gt;&lt;/g&gt;
+
+    &lt;text x=&quot;530&quot; y=&quot;478&quot; class=&quot;strong&quot;&gt;선택된 bank 두 칸을 아래에서 640 columns 폭으로 확대&lt;/text&gt;
+    &lt;rect id=&quot;lr4-write-strip&quot; x=&quot;530&quot; y=&quot;500&quot; width=&quot;850&quot; height=&quot;48&quot; rx=&quot;5&quot; class=&quot;bank-write&quot;&gt;&lt;/rect&gt;
+    &lt;g id=&quot;lr4-write-cols&quot;&gt;&lt;/g&gt;
+    &lt;text id=&quot;lr4-write-strip-label&quot; x=&quot;955&quot; y=&quot;530&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;WRITE bank 48 · camera row 304 · col 0…639&lt;/text&gt;
+    &lt;rect id=&quot;lr4-read-strip&quot; x=&quot;530&quot; y=&quot;566&quot; width=&quot;850&quot; height=&quot;48&quot; rx=&quot;5&quot; class=&quot;bank-read&quot;&gt;&lt;/rect&gt;
+    &lt;g id=&quot;lr4-read-cols&quot;&gt;&lt;/g&gt;
+    &lt;text id=&quot;lr4-read-strip-label&quot; x=&quot;955&quot; y=&quot;596&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;READ bank 25 · camera row 281 · col 0…639&lt;/text&gt;
+    &lt;text x=&quot;955&quot; y=&quot;640&quot; text-anchor=&quot;middle&quot; class=&quot;small&quot;&gt;별도 메모리가 아니라 위 bank 한 칸의 확대도&lt;/text&gt;
+
+    &lt;path d=&quot;M620 685 V730&quot; class=&quot;write-arrow&quot;&gt;&lt;/path&gt;
+
+    &lt;rect x=&quot;40&quot; y=&quot;730&quot; width=&quot;1370&quot; height=&quot;350&quot; rx=&quot;10&quot; class=&quot;panel&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;70&quot; y=&quot;766&quot; class=&quot;subtitle&quot;&gt;3. descriptor FIFO · {카메라 row data, bank} 대기열&lt;/text&gt;
+    &lt;text x=&quot;70&quot; y=&quot;793&quot; class=&quot;small&quot;&gt;영상 pixel은 링버퍼 bank에 남고 {카메라 row data, bank}만 PCLK에서 100MHz 출력 도메인으로 넘어감&lt;/text&gt;
+    &lt;g id=&quot;lr4-fifo&quot;&gt;&lt;/g&gt;
+    &lt;rect x=&quot;70&quot; y=&quot;995&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;3&quot; class=&quot;fifo-push&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;98&quot; y=&quot;1010&quot; class=&quot;strong&quot;&gt;PUSH&lt;/text&gt;
+    &lt;rect x=&quot;70&quot; y=&quot;1025&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;3&quot; class=&quot;fifo-pop&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;98&quot; y=&quot;1040&quot; class=&quot;strong&quot;&gt;POP&lt;/text&gt;
+    &lt;text id=&quot;lr4-fifo-count&quot; x=&quot;1370&quot; y=&quot;1025&quot; text-anchor=&quot;end&quot; class=&quot;small&quot;&gt;24 / 64 descriptors&lt;/text&gt;
+
+    &lt;path d=&quot;M1380 590 H1430 V1070 H620 V1120&quot; class=&quot;data-arrow&quot;&gt;&lt;/path&gt;
+    &lt;text x=&quot;1400&quot; y=&quot;570&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;DATA · 640 pixels&lt;/text&gt;
+    &lt;path d=&quot;M1260 990 V1090 H900 V1120&quot; class=&quot;meta-arrow&quot;&gt;&lt;/path&gt;
+    &lt;text x=&quot;1260&quot; y=&quot;975&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;CONTROL · descriptor&lt;/text&gt;
+
+    &lt;rect x=&quot;300&quot; y=&quot;1120&quot; width=&quot;850&quot; height=&quot;280&quot; rx=&quot;10&quot; class=&quot;panel&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;620&quot; y=&quot;1110&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;DATA 입력&lt;/text&gt;
+    &lt;text x=&quot;900&quot; y=&quot;1110&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;CONTROL 입력&lt;/text&gt;
+    &lt;text x=&quot;725&quot; y=&quot;1160&quot; text-anchor=&quot;middle&quot; class=&quot;subtitle&quot;&gt;4. VGA line streamer&lt;/text&gt;
+    &lt;text x=&quot;340&quot; y=&quot;1205&quot; class=&quot;strong&quot;&gt;① POP data: {카메라 row data, bank}&lt;/text&gt;
+    &lt;text id=&quot;lr4-stream-desc&quot; x=&quot;340&quot; y=&quot;1235&quot;&gt;카메라 row data 281 · bank 25&lt;/text&gt;
+    &lt;text x=&quot;340&quot; y=&quot;1275&quot; class=&quot;strong&quot;&gt;② 링버퍼 bank에 저장된 col 0…639 data READ&lt;/text&gt;
+    &lt;text id=&quot;lr4-stream-read&quot; x=&quot;340&quot; y=&quot;1305&quot;&gt;bank 25 · RGB444 pixel 640개&lt;/text&gt;
+    &lt;text x=&quot;340&quot; y=&quot;1345&quot; class=&quot;strong&quot;&gt;③ 같은 bank에 저장된 data를 연속된 VGA row data로 출력한 뒤 POP&lt;/text&gt;
+    &lt;text id=&quot;lr4-stream-map&quot; x=&quot;340&quot; y=&quot;1375&quot; class=&quot;small&quot;&gt;화면 B의 카메라 row data 위치 41 → VGA row data 82, 83&lt;/text&gt;
+
+    &lt;path d=&quot;M725 1400 V1525 H240 V1580&quot; class=&quot;arrow&quot;&gt;&lt;/path&gt;
+    &lt;path d=&quot;M725 1525 H1210 V1580&quot; class=&quot;arrow&quot;&gt;&lt;/path&gt;
+    &lt;text x=&quot;725&quot; y=&quot;1505&quot; text-anchor=&quot;middle&quot; class=&quot;small&quot;&gt;VGA refresh마다 A 또는 B 전송 화면 하나가 나감&lt;/text&gt;
+
+    &lt;text x=&quot;40&quot; y=&quot;1450&quot; class=&quot;subtitle&quot;&gt;5. VGA 60Hz 전송 화면 두 장이 카메라 480 rows를 나눠 운반&lt;/text&gt;
+    &lt;text x=&quot;40&quot; y=&quot;1478&quot; class=&quot;small&quot;&gt;25 MHz ÷ (800 × 521) = 59.9808 Hz · 한 화면 16.67 ms · 두 화면 33.34 ms → 최대 29.99 complete fps&lt;/text&gt;
+
+    &lt;text x=&quot;240&quot; y=&quot;1570&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;VGA 전송 화면 A · 640×480&lt;/text&gt;
+    &lt;rect id=&quot;lr4-vga-a&quot; x=&quot;40&quot; y=&quot;1580&quot; width=&quot;400&quot; height=&quot;300&quot; rx=&quot;7&quot; class=&quot;screen-a&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;240&quot; y=&quot;1618&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;camera source rows 0…239&lt;/text&gt;
+    &lt;text x=&quot;240&quot; y=&quot;1648&quot; text-anchor=&quot;middle&quot; class=&quot;small&quot;&gt;각 source row를 2번 출력 → VGA 480 rows&lt;/text&gt;
+    &lt;line id=&quot;lr4-vga-a-line1&quot; x1=&quot;40&quot; y1=&quot;1670&quot; x2=&quot;440&quot; y2=&quot;1670&quot; class=&quot;read-line&quot;&gt;&lt;/line&gt;
+    &lt;line id=&quot;lr4-vga-a-line2&quot; x1=&quot;40&quot; y1=&quot;1671&quot; x2=&quot;440&quot; y2=&quot;1671&quot; class=&quot;read-line&quot;&gt;&lt;/line&gt;
+
+    &lt;text x=&quot;1210&quot; y=&quot;1570&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;VGA 전송 화면 B · 640×480&lt;/text&gt;
+    &lt;rect id=&quot;lr4-vga-b&quot; x=&quot;1010&quot; y=&quot;1580&quot; width=&quot;400&quot; height=&quot;300&quot; rx=&quot;7&quot; class=&quot;screen-b&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;1210&quot; y=&quot;1618&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;camera source rows 240…479&lt;/text&gt;
+    &lt;text x=&quot;1210&quot; y=&quot;1648&quot; text-anchor=&quot;middle&quot; class=&quot;small&quot;&gt;각 source row를 2번 출력 → VGA 480 rows&lt;/text&gt;
+    &lt;line id=&quot;lr4-vga-b-line1&quot; x1=&quot;1010&quot; y1=&quot;1670&quot; x2=&quot;1410&quot; y2=&quot;1670&quot; class=&quot;read-line&quot;&gt;&lt;/line&gt;
+    &lt;line id=&quot;lr4-vga-b-line2&quot; x1=&quot;1010&quot; y1=&quot;1671&quot; x2=&quot;1410&quot; y2=&quot;1671&quot; class=&quot;read-line&quot;&gt;&lt;/line&gt;
+
+    &lt;rect x=&quot;525&quot; y=&quot;1580&quot; width=&quot;400&quot; height=&quot;300&quot; rx=&quot;8&quot; class=&quot;panel&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;725&quot; y=&quot;1620&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;A/B는 서로 다른 카메라 프레임이 아님&lt;/text&gt;
+    &lt;text x=&quot;555&quot; y=&quot;1670&quot;&gt;A · 원본 상반부 240 rows 운반&lt;/text&gt;
+    &lt;text x=&quot;555&quot; y=&quot;1705&quot;&gt;B · 같은 원본의 하반부 240 rows 운반&lt;/text&gt;
+    &lt;line x1=&quot;555&quot; y1=&quot;1732&quot; x2=&quot;895&quot; y2=&quot;1732&quot; class=&quot;divider&quot;&gt;&lt;/line&gt;
+    &lt;text x=&quot;555&quot; y=&quot;1775&quot;&gt;가로 폭은 둘 다 640 columns로 유지&lt;/text&gt;
+    &lt;text x=&quot;555&quot; y=&quot;1812&quot; class=&quot;small&quot;&gt;현재 카메라 약 20 fps &amp;lt; 전송 상한 약 30 fps&lt;/text&gt;
+
+    &lt;path d=&quot;M240 1880 V2000 H650 V2030&quot; class=&quot;arrow&quot;&gt;&lt;/path&gt;
+    &lt;path d=&quot;M1210 1880 V2000 H800 V2030&quot; class=&quot;arrow&quot;&gt;&lt;/path&gt;
+
+    &lt;text x=&quot;40&quot; y=&quot;1930&quot; class=&quot;subtitle&quot;&gt;6. 두 번째 복제 row 끝 21 columns = Python이 row 위치를 찾는 line header&lt;/text&gt;
+    &lt;text x=&quot;40&quot; y=&quot;1960&quot; class=&quot;small&quot;&gt;VGA 화면 A/B에서 들어온 각 row pair가 이 단계를 거쳐 source row 번호를 함께 전달&lt;/text&gt;
+    &lt;text x=&quot;40&quot; y=&quot;2060&quot; class=&quot;strong&quot;&gt;복제 row 1&lt;/text&gt;
+    &lt;rect x=&quot;190&quot; y=&quot;2032&quot; width=&quot;1220&quot; height=&quot;42&quot; rx=&quot;4&quot; class=&quot;screen&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;800&quot; y=&quot;2059&quot; text-anchor=&quot;middle&quot;&gt;camera row 영상 · columns 0…639&lt;/text&gt;
+    &lt;text x=&quot;40&quot; y=&quot;2120&quot; class=&quot;strong&quot;&gt;복제 row 2&lt;/text&gt;
+    &lt;rect x=&quot;190&quot; y=&quot;2092&quot; width=&quot;1138&quot; height=&quot;42&quot; rx=&quot;4&quot; class=&quot;screen&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;1328&quot; y=&quot;2092&quot; width=&quot;82&quot; height=&quot;42&quot; rx=&quot;3&quot; class=&quot;header&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;759&quot; y=&quot;2119&quot; text-anchor=&quot;middle&quot;&gt;같은 영상 · columns 0…618&lt;/text&gt;
+    &lt;text x=&quot;1369&quot; y=&quot;2158&quot; text-anchor=&quot;middle&quot; class=&quot;small&quot;&gt;끝 21 columns&lt;/text&gt;
+    &lt;g id=&quot;lr4-header-bits&quot;&gt;&lt;/g&gt;
+    &lt;text x=&quot;725&quot; y=&quot;2255&quot; text-anchor=&quot;middle&quot; class=&quot;small&quot;&gt;source frame ID = 같은 카메라 캡처에서 나온 rows를 묶는 번호 · VGA 화면 A/B 번호가 아님&lt;/text&gt;
+
+    &lt;path d=&quot;M725 2270 V2340&quot; class=&quot;arrow&quot;&gt;&lt;/path&gt;
+    &lt;text x=&quot;725&quot; y=&quot;2315&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;header의 source row를 기준으로 Python 배열의 제자리 row에 저장&lt;/text&gt;
+
+    &lt;text x=&quot;725&quot; y=&quot;2370&quot; text-anchor=&quot;middle&quot; class=&quot;subtitle&quot;&gt;7. Python 완성 frame · 640 columns × 480 rows&lt;/text&gt;
+    &lt;rect x=&quot;525&quot; y=&quot;2390&quot; width=&quot;400&quot; height=&quot;300&quot; rx=&quot;7&quot; class=&quot;screen&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;525&quot; y=&quot;2390&quot; width=&quot;400&quot; height=&quot;150&quot; class=&quot;screen-a&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;525&quot; y=&quot;2540&quot; width=&quot;400&quot; height=&quot;150&quot; class=&quot;screen-b&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;725&quot; y=&quot;2465&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;frame[0…239][0…639] ← 화면 A의 rows&lt;/text&gt;
+    &lt;text x=&quot;725&quot; y=&quot;2615&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;frame[240…479][0…639] ← 화면 B의 rows&lt;/text&gt;
+    &lt;line id=&quot;lr4-python-line&quot; x1=&quot;525&quot; y1=&quot;2560&quot; x2=&quot;925&quot; y2=&quot;2560&quot; class=&quot;read-line&quot;&gt;&lt;/line&gt;
+    &lt;text id=&quot;lr4-python-label&quot; x=&quot;725&quot; y=&quot;2725&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;header source row 281 → Python frame row 281&lt;/text&gt;
+    &lt;text x=&quot;725&quot; y=&quot;2755&quot; text-anchor=&quot;middle&quot; class=&quot;small&quot;&gt;frame ID + source row + checksum을 검사해 정확한 row에 저장&lt;/text&gt;
+
+    &lt;line x1=&quot;40&quot; y1=&quot;2800&quot; x2=&quot;1410&quot; y2=&quot;2800&quot; class=&quot;divider&quot;&gt;&lt;/line&gt;
+    &lt;text x=&quot;40&quot; y=&quot;2845&quot; class=&quot;title&quot;&gt;풀 프레임 대신 64-row 링버퍼를 쓰는 이유&lt;/text&gt;
+    &lt;text x=&quot;40&quot; y=&quot;2875&quot; class=&quot;small&quot;&gt;영상 payload → 이론적 RAMB36 최소량 → 실제 합성된 프로젝트 전체 사용량&lt;/text&gt;
+
+    &lt;text x=&quot;40&quot; y=&quot;2925&quot; class=&quot;subtitle&quot;&gt;영상 저장 payload&lt;/text&gt;
+    &lt;text x=&quot;40&quot; y=&quot;2970&quot;&gt;RGB565 풀 프레임&lt;/text&gt;
+    &lt;rect x=&quot;310&quot; y=&quot;2943&quot; width=&quot;1050&quot; height=&quot;42&quot; rx=&quot;5&quot; class=&quot;bar-bg&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;310&quot; y=&quot;2943&quot; width=&quot;1050&quot; height=&quot;42&quot; rx=&quot;5&quot; class=&quot;bar-full&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;1345&quot; y=&quot;2970&quot; text-anchor=&quot;end&quot; class=&quot;strong&quot;&gt;614.4 KB&lt;/text&gt;
+    &lt;text x=&quot;40&quot; y=&quot;3030&quot;&gt;RGB444 64-row 링&lt;/text&gt;
+    &lt;rect x=&quot;310&quot; y=&quot;3003&quot; width=&quot;1050&quot; height=&quot;42&quot; rx=&quot;5&quot; class=&quot;bar-bg&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;310&quot; y=&quot;3003&quot; width=&quot;105&quot; height=&quot;42&quot; rx=&quot;5&quot; class=&quot;bar-ring&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;435&quot; y=&quot;3030&quot; class=&quot;strong&quot;&gt;61.44 KB · 90% 감소&lt;/text&gt;
+
+    &lt;text x=&quot;40&quot; y=&quot;3095&quot; class=&quot;subtitle&quot;&gt;카메라 영상 메모리의 이론적 RAMB36 최소량&lt;/text&gt;
+    &lt;text x=&quot;40&quot; y=&quot;3140&quot;&gt;풀 프레임 RGB565&lt;/text&gt;
+    &lt;rect x=&quot;310&quot; y=&quot;3113&quot; width=&quot;1050&quot; height=&quot;42&quot; rx=&quot;5&quot; class=&quot;bar-bg&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;310&quot; y=&quot;3113&quot; width=&quot;1050&quot; height=&quot;42&quot; rx=&quot;5&quot; class=&quot;bar-full&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;1345&quot; y=&quot;3140&quot; text-anchor=&quot;end&quot; class=&quot;strong&quot;&gt;최소 134개 · Basys 3의 50개 초과&lt;/text&gt;
+    &lt;text x=&quot;40&quot; y=&quot;3200&quot;&gt;64-row RGB444 링&lt;/text&gt;
+    &lt;rect x=&quot;310&quot; y=&quot;3173&quot; width=&quot;1050&quot; height=&quot;42&quot; rx=&quot;5&quot; class=&quot;bar-bg&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;310&quot; y=&quot;3173&quot; width=&quot;110&quot; height=&quot;42&quot; rx=&quot;5&quot; class=&quot;bar-ring&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;440&quot; y=&quot;3200&quot; class=&quot;strong&quot;&gt;bit 용량상 최소 14개&lt;/text&gt;
+
+    &lt;text x=&quot;40&quot; y=&quot;3260&quot; class=&quot;subtitle&quot;&gt;현재 Vivado 실제 합성 결과 · Basys 3 RAMB36 총 50개&lt;/text&gt;
+    &lt;rect x=&quot;310&quot; y=&quot;3282&quot; width=&quot;1050&quot; height=&quot;48&quot; rx=&quot;5&quot; class=&quot;bar-bg&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;310&quot; y=&quot;3282&quot; width=&quot;504&quot; height=&quot;48&quot; rx=&quot;5&quot; class=&quot;bar-ring&quot;&gt;&lt;/rect&gt;
+    &lt;rect x=&quot;814&quot; y=&quot;3282&quot; width=&quot;252&quot; height=&quot;48&quot; rx=&quot;5&quot; class=&quot;bar-canvas&quot;&gt;&lt;/rect&gt;
+    &lt;text x=&quot;562&quot; y=&quot;3312&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;카메라 링 24개&lt;/text&gt;
+    &lt;text x=&quot;940&quot; y=&quot;3312&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;캔버스 12개&lt;/text&gt;
+    &lt;text x=&quot;1210&quot; y=&quot;3312&quot; text-anchor=&quot;middle&quot;&gt;여유 14개&lt;/text&gt;
+    &lt;text x=&quot;310&quot; y=&quot;3370&quot; class=&quot;strong&quot;&gt;프로젝트 전체 36 / 50 = 72% 사용 · 카메라 링의 실제 BRAM packing 결과는 24개&lt;/text&gt;
+  &lt;/svg&gt;
+
+  &lt;script&gt;
+    (() =&gt; {
+      const root = document.getElementById(&#x27;line-ring-explainer-v4&#x27;);
+      if (!root) return;
+      const q = (id) =&gt; root.querySelector(&#x27;#&#x27; + id);
+      const ns = &#x27;http://www.w3.org/2000/svg&#x27;;
+      const make = (tag, attrs = {}) =&gt; {
+        const el = document.createElementNS(ns, tag);
+        Object.entries(attrs).forEach(([key, value]) =&gt; el.setAttribute(key, String(value)));
+        return el;
+      };
+
+      const bankGroup = q(&#x27;lr4-banks&#x27;);
+      const bankRects = [];
+      for (let i = 0; i &lt; 64; i += 1) {
+        const col = i % 8;
+        const row = Math.floor(i / 8);
+        const x = 535 + col * 105;
+        const y = 190 + row * 34;
+        const rect = make(&#x27;rect&#x27;, {x, y, width: 94, height: 27, rx: 4, class: &#x27;bank&#x27;});
+        const label = make(&#x27;text&#x27;, {x: x + 47, y: y + 19, &#x27;text-anchor&#x27;: &#x27;middle&#x27;, class: &#x27;tiny&#x27;});
+        label.textContent = &#x27;bank &#x27; + i;
+        bankGroup.appendChild(rect);
+        bankGroup.appendChild(label);
+        bankRects.push(rect);
+      }
+
+      [&#x27;lr4-write-cols&#x27;, &#x27;lr4-read-cols&#x27;].forEach((id, rowIndex) =&gt; {
+        const group = q(id);
+        for (let i = 0; i &lt; 20; i += 1) {
+          group.appendChild(make(&#x27;rect&#x27;, {
+            x: 530 + i * 42.5,
+            y: rowIndex === 0 ? 500 : 566,
+            width: 42.5,
+            height: 48,
+            fill: &#x27;transparent&#x27;,
+            stroke: &#x27;var(--border)&#x27;,
+            &#x27;stroke-width&#x27;: 0.7
+          }));
+        }
+      });
+
+      const fifoGroup = q(&#x27;lr4-fifo&#x27;);
+      const fifoRects = [];
+      const fifoMain = [];
+      const fifoSub = [];
+      for (let i = 0; i &lt; 24; i += 1) {
+        const col = i % 8;
+        const row = Math.floor(i / 8);
+        const x = 70 + col * 160;
+        const y = 830 + row * 55;
+        const rect = make(&#x27;rect&#x27;, {x, y, width: 145, height: 47, rx: 5, class: &#x27;fifo-cell&#x27;});
+        const main = make(&#x27;text&#x27;, {x: x + 72.5, y: y + 19, &#x27;text-anchor&#x27;: &#x27;middle&#x27;, class: &#x27;tiny&#x27;});
+        const sub = make(&#x27;text&#x27;, {x: x + 72.5, y: y + 37, &#x27;text-anchor&#x27;: &#x27;middle&#x27;, class: &#x27;tiny&#x27;});
+        fifoGroup.appendChild(rect);
+        fifoGroup.appendChild(main);
+        fifoGroup.appendChild(sub);
+        fifoRects.push(rect);
+        fifoMain.push(main);
+        fifoSub.push(sub);
+      }
+
+      const headerBits = [1,0,1,1, 0,1,1,0, 1,0,0,0,1,1,0,0,1, 0,1,1,0];
+      const headerGroup = q(&#x27;lr4-header-bits&#x27;);
+      headerBits.forEach((bit, i) =&gt; {
+        const x = 252 + i * 45;
+        const rect = make(&#x27;rect&#x27;, {x, y: 2178, width: 38, height: 32, rx: 3, class: bit ? &#x27;header&#x27; : &#x27;bank&#x27;});
+        const label = make(&#x27;text&#x27;, {x: x + 19, y: 2200, &#x27;text-anchor&#x27;: &#x27;middle&#x27;, class: &#x27;tiny&#x27;});
+        label.textContent = bit;
+        headerGroup.appendChild(rect);
+        headerGroup.appendChild(label);
+      });
+      [
+        {x: 297, text: &#x27;sync&#x27;},
+        {x: 410, text: &#x27;valid&#x27;},
+        {x: 523, text: &#x27;source frame ID&#x27;},
+        {x: 815, text: &#x27;source row&#x27;},
+        {x: 1108, text: &#x27;checksum&#x27;}
+      ].forEach(item =&gt; {
+        const label = make(&#x27;text&#x27;, {x: item.x, y: 2170, &#x27;text-anchor&#x27;: &#x27;middle&#x27;, class: &#x27;tiny&#x27;});
+        label.textContent = item.text;
+        headerGroup.appendChild(label);
+      });
+
+      let rowIndex = 304;
+      let speed = 8;
+      let timer = null;
+
+      const descriptor = (row) =&gt; ({row, bank: row % 64});
+
+      const update = () =&gt; {
+        const write = descriptor(rowIndex);
+        const ready = rowIndex &gt;= 23;
+        const read = ready ? descriptor(rowIndex - 23) : null;
+        const count = Math.min(rowIndex + 1, 24);
+        const first = Math.max(0, rowIndex - count + 1);
+        const queue = Array.from({length: count}, (_, i) =&gt; descriptor(first + i));
+
+        q(&#x27;lr4-row&#x27;).value = rowIndex;
+        q(&#x27;lr4-row-value&#x27;).textContent = rowIndex;
+        q(&#x27;lr4-write-status&#x27;).textContent = `WRITE row ${write.row} → bank ${write.bank}`;
+        q(&#x27;lr4-fifo-status&#x27;).textContent = ready ? &#x27;descriptor FIFO 24 / 64&#x27; : `prebuffer ${count} / 24`;
+        q(&#x27;lr4-read-status&#x27;).textContent = read ? `READ row ${read.row} ← bank ${read.bank}` : &#x27;READ 대기&#x27;;
+
+        q(&#x27;lr4-camera-write-line&#x27;).setAttribute(&#x27;y1&#x27;, 140 + write.row * 300 / 480);
+        q(&#x27;lr4-camera-write-line&#x27;).setAttribute(&#x27;y2&#x27;, 140 + write.row * 300 / 480);
+        q(&#x27;lr4-camera-write-label&#x27;).textContent = `WRITE row ${write.row} · col 0…639`;
+        q(&#x27;lr4-write-strip-label&#x27;).textContent = `WRITE bank ${write.bank} · camera row ${write.row} · col 0…639`;
+
+        bankRects.forEach((rect, i) =&gt; {
+          let cls = &#x27;bank&#x27;;
+          if (read &amp;&amp; i === read.bank) cls = &#x27;bank-read&#x27;;
+          if (i === write.bank) cls = &#x27;bank-write&#x27;;
+          rect.setAttribute(&#x27;class&#x27;, cls);
+        });
+
+        for (let slot = 0; slot &lt; 24; slot += 1) {
+          const visible = slot &lt; queue.length;
+          fifoRects[slot].setAttribute(&#x27;opacity&#x27;, visible ? &#x27;1&#x27; : &#x27;.18&#x27;);
+          fifoMain[slot].setAttribute(&#x27;opacity&#x27;, visible ? &#x27;1&#x27; : &#x27;.18&#x27;);
+          fifoSub[slot].setAttribute(&#x27;opacity&#x27;, visible ? &#x27;1&#x27; : &#x27;.18&#x27;);
+          if (visible) {
+            const d = queue[queue.length - 1 - slot];
+            fifoMain[slot].textContent = `카메라 row ${d.row}`;
+            fifoSub[slot].textContent = `bank ${d.bank}`;
+            fifoRects[slot].setAttribute(&#x27;class&#x27;, slot === 0 ? &#x27;fifo-push&#x27; : slot === queue.length - 1 ? &#x27;fifo-pop&#x27; : &#x27;fifo-cell&#x27;);
+          } else {
+            fifoMain[slot].textContent = &#x27;&#x27;;
+            fifoSub[slot].textContent = &#x27;&#x27;;
+            fifoRects[slot].setAttribute(&#x27;class&#x27;, &#x27;fifo-cell&#x27;);
+          }
+        }
+        q(&#x27;lr4-fifo-count&#x27;).textContent = ready ? &#x27;24 / 64 descriptors&#x27; : `${count} / 24 prebuffer`;
+
+        [&#x27;lr4-vga-a-line1&#x27;,&#x27;lr4-vga-a-line2&#x27;,&#x27;lr4-vga-b-line1&#x27;,&#x27;lr4-vga-b-line2&#x27;,&#x27;lr4-python-line&#x27;].forEach(id =&gt; q(id).setAttribute(&#x27;opacity&#x27;, read ? &#x27;1&#x27; : &#x27;0&#x27;));
+        if (!read) {
+          q(&#x27;lr4-camera-read-line&#x27;).setAttribute(&#x27;opacity&#x27;, &#x27;0&#x27;);
+          q(&#x27;lr4-camera-read-label&#x27;).textContent = `READ는 descriptor 24개가 모인 뒤 시작 · ${24 - count}개 더 필요`;
+          q(&#x27;lr4-read-strip-label&#x27;).textContent = &#x27;READ bank 대기 · prebuffer 확보 중&#x27;;
+          q(&#x27;lr4-stream-desc&#x27;).textContent = `POP 대기 · ${count} / 24`;
+          q(&#x27;lr4-stream-read&#x27;).textContent = &#x27;링버퍼 bank READ 대기&#x27;;
+          q(&#x27;lr4-stream-map&#x27;).textContent = &#x27;24개 prebuffer가 확보되면 POP 시작&#x27;;
+          q(&#x27;lr4-vga-status&#x27;).textContent = &#x27;VGA 유효 row 대기&#x27;;
+          q(&#x27;lr4-python-label&#x27;).textContent = &#x27;아직 Python에 조립할 유효 source row 없음&#x27;;
+          return;
+        }
+
+        const transport = read.row &lt; 240 ? &#x27;A&#x27; : &#x27;B&#x27;;
+        const slot = read.row % 240;
+        const vga0 = slot * 2;
+        const vga1 = vga0 + 1;
+        const baseX = transport === &#x27;A&#x27; ? 40 : 1010;
+        const baseY = 1580;
+        const y0 = baseY + vga0 * 300 / 480;
+        const y1 = baseY + vga1 * 300 / 480;
+
+        q(&#x27;lr4-camera-read-line&#x27;).setAttribute(&#x27;opacity&#x27;, &#x27;1&#x27;);
+        q(&#x27;lr4-camera-read-line&#x27;).setAttribute(&#x27;y1&#x27;, 140 + read.row * 300 / 480);
+        q(&#x27;lr4-camera-read-line&#x27;).setAttribute(&#x27;y2&#x27;, 140 + read.row * 300 / 480);
+        q(&#x27;lr4-camera-read-label&#x27;).textContent = `READ row ${read.row} · col 0…639`;
+        q(&#x27;lr4-read-strip-label&#x27;).textContent = `READ bank ${read.bank} · camera row ${read.row} · col 0…639`;
+        q(&#x27;lr4-stream-desc&#x27;).textContent = `카메라 row data ${read.row} · bank ${read.bank}`;
+        q(&#x27;lr4-stream-read&#x27;).textContent = `bank ${read.bank} · col 0…639 · RGB444 pixel 640개`;
+        q(&#x27;lr4-stream-map&#x27;).textContent = `화면 ${transport}의 카메라 row data 위치 ${slot} → VGA row data ${vga0}, ${vga1}`;
+        q(&#x27;lr4-vga-status&#x27;).textContent = `VGA 전송 화면 ${transport} · rows ${vga0}, ${vga1}`;
+
+        const ids = transport === &#x27;A&#x27;
+          ? [&#x27;lr4-vga-a-line1&#x27;,&#x27;lr4-vga-a-line2&#x27;]
+          : [&#x27;lr4-vga-b-line1&#x27;,&#x27;lr4-vga-b-line2&#x27;];
+        q(ids[0]).setAttribute(&#x27;x1&#x27;, baseX);
+        q(ids[0]).setAttribute(&#x27;x2&#x27;, baseX + 400);
+        q(ids[0]).setAttribute(&#x27;y1&#x27;, y0);
+        q(ids[0]).setAttribute(&#x27;y2&#x27;, y0);
+        q(ids[1]).setAttribute(&#x27;x1&#x27;, baseX);
+        q(ids[1]).setAttribute(&#x27;x2&#x27;, baseX + 400);
+        q(ids[1]).setAttribute(&#x27;y1&#x27;, y1);
+        q(ids[1]).setAttribute(&#x27;y2&#x27;, y1);
+        const offIds = transport === &#x27;A&#x27;
+          ? [&#x27;lr4-vga-b-line1&#x27;,&#x27;lr4-vga-b-line2&#x27;]
+          : [&#x27;lr4-vga-a-line1&#x27;,&#x27;lr4-vga-a-line2&#x27;];
+        offIds.forEach(id =&gt; q(id).setAttribute(&#x27;opacity&#x27;, &#x27;0&#x27;));
+
+        const pyY = 2390 + read.row * 300 / 480;
+        q(&#x27;lr4-python-line&#x27;).setAttribute(&#x27;y1&#x27;, pyY);
+        q(&#x27;lr4-python-line&#x27;).setAttribute(&#x27;y2&#x27;, pyY);
+        q(&#x27;lr4-python-label&#x27;).textContent = `header source row ${read.row} → Python frame row ${read.row}`;
+      };
+
+      const step = () =&gt; {
+        rowIndex = rowIndex &gt;= 479 ? 0 : rowIndex + 1;
+        update();
+      };
+
+      q(&#x27;lr4-row&#x27;).addEventListener(&#x27;input&#x27;, () =&gt; {
+        rowIndex = Number(q(&#x27;lr4-row&#x27;).value);
+        update();
+      });
+      q(&#x27;lr4-speed&#x27;).addEventListener(&#x27;input&#x27;, () =&gt; {
+        speed = Number(q(&#x27;lr4-speed&#x27;).value);
+        q(&#x27;lr4-speed-value&#x27;).textContent = speed;
+        if (timer) {
+          clearInterval(timer);
+          timer = setInterval(step, 1000 / speed);
+        }
+      });
+      q(&#x27;lr4-play&#x27;).addEventListener(&#x27;click&#x27;, () =&gt; {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+          q(&#x27;lr4-play&#x27;).textContent = &#x27;▶ 흐름 재생&#x27;;
+        } else {
+          q(&#x27;lr4-play&#x27;).textContent = &#x27;■ 정지&#x27;;
+          step();
+          timer = setInterval(step, 1000 / speed);
+        }
+      });
+
+      update();
+    })();
+  &lt;/script&gt;
+&lt;/div&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>

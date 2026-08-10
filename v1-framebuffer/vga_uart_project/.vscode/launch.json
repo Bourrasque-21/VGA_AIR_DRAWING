@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FPGA Air Drawing Web (F5)",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "${workspaceFolder}/python/.venv/Scripts/python.exe",
+      "program": "${workspaceFolder}/python/web_app.py",
+      "console": "integratedTerminal",
+      "args": ["--port", "COM3", "--camera", "0"],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

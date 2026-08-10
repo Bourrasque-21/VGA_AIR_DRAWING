@@ -1,0 +1,63 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Wed Jul 15 10:08:11 2026
+| Host         : DESKTOP-7CFQ9ND running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -file D:/git/vga_project/vga_uart_project/rgb444_synth_utilization.rpt
+| Design       : top_airDrawing
+| Device       : 7a35tcpg236-1
+| Design State : Synthesized
+-------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-------------------------------------+-------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+|               Instance              |          Module         | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++-------------------------------------+-------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+| top_airDrawing                      |                   (top) |       1079 |       1079 |       0 |    0 | 931 |     48 |      0 |          4 |
+|   (top_airDrawing)                  |                   (top) |          9 |          9 |       0 |    0 |  26 |      0 |      0 |          0 |
+|   U_BTN_ERASER                      |         button_debounce |         16 |         16 |       0 |    0 |  24 |      0 |      0 |          0 |
+|   U_BTN_MODE                        |       button_debounce_0 |         16 |         16 |       0 |    0 |  24 |      0 |      0 |          0 |
+|   U_BTN_SIZE                        |       button_debounce_1 |         16 |         16 |       0 |    0 |  24 |      0 |      0 |          0 |
+|   U_CLOCK_GEN                       |               clock_gen |          3 |          3 |       0 |    0 |   2 |      0 |      0 |          0 |
+|   U_PEN_CONFIG_CONTROLLER           |   pen_config_controller |         23 |         23 |       0 |    0 |  19 |      0 |      0 |          0 |
+|   U_TOP_BUFFER                      |              top_buffer |        679 |        679 |       0 |    0 | 482 |     48 |      0 |          4 |
+|     U_TOP_CANVAS                    |              top_canvas |        616 |        616 |       0 |    0 | 482 |     12 |      0 |          3 |
+|       U_CANVAS_BUFFER               |       canvas_buffer_top |        616 |        616 |       0 |    0 | 482 |     12 |      0 |          3 |
+|         (U_CANVAS_BUFFER)           |       canvas_buffer_top |          0 |          0 |       0 |    0 |   0 |      0 |      0 |          0 |
+|         U_bbox_center_accum         |       bbox_center_accum |         78 |         78 |       0 |    0 |  94 |      0 |      0 |          0 |
+|         U_brush_draw_engine         |       brush_draw_engine |        395 |        395 |       0 |    0 | 230 |      0 |      0 |          1 |
+|           U_BRESENHAM_INTERPOLATOR  |  bresenham_interpolator |        152 |        152 |       0 |    0 |  74 |      0 |      0 |          0 |
+|           U_CIRCULAR_BRUSH_RENDERER | circular_brush_renderer |        155 |        155 |       0 |    0 |  56 |      0 |      0 |          1 |
+|           U_STROKE_CONTROLLER       | brush_stroke_controller |         88 |         88 |       0 |    0 | 100 |      0 |      0 |          0 |
+|         U_canvas_buffer             |           canvas_buffer |         42 |         42 |       0 |    0 |  20 |     12 |      0 |          0 |
+|         U_coord_filter              |            coord_filter |        101 |        101 |       0 |    0 | 138 |      0 |      0 |          2 |
+|     U_TOP_FRAMEBUFFER               |         top_framebuffer |         63 |         63 |       0 |    0 |   0 |     36 |      0 |          1 |
+|       U_FRAMEBUFFER                 |             framebuffer |          0 |          0 |       0 |    0 |   0 |     36 |      0 |          0 |
+|       U_FRAMEBUFFER_READER          |      framebuffer_reader |         63 |         63 |       0 |    0 |   0 |      0 |      0 |          1 |
+|   U_TOP_OV7670                      |              top_ov7670 |        176 |        176 |       0 |    0 | 150 |      0 |      0 |          0 |
+|     U_MEMCONTROLLER                 |    ov7670_memcontroller |         55 |         55 |       0 |    0 |  50 |      0 |      0 |          0 |
+|     U_SCCB_CTRL                     |        ov7670_sccb_ctrl |        121 |        121 |       0 |    0 | 100 |      0 |      0 |          0 |
+|       (U_SCCB_CTRL)                 |        ov7670_sccb_ctrl |         85 |         85 |       0 |    0 |  72 |      0 |      0 |          0 |
+|       U_I2C_MASTER                  |              I2C_Master |         36 |         36 |       0 |    0 |  28 |      0 |      0 |          0 |
+|         U_I2C_MASTER                |              i2c_master |         36 |         36 |       0 |    0 |  28 |      0 |      0 |          0 |
+|   U_UART_PACKET_DECODER             |     uart_packet_decoder |         59 |         59 |       0 |    0 |  79 |      0 |      0 |          0 |
+|     (U_UART_PACKET_DECODER)         |     uart_packet_decoder |         10 |         10 |       0 |    0 |  34 |      0 |      0 |          0 |
+|     U_BAUD_TICK_16                  |          baud_tick_16_2 |         13 |         13 |       0 |    0 |  25 |      0 |      0 |          0 |
+|     U_UART_RX                       |                 uart_rx |         36 |         36 |       0 |    0 |  20 |      0 |      0 |          0 |
+|   U_UART_PACKET_SENDER              |      uart_packet_sender |         51 |         51 |       0 |    0 |  81 |      0 |      0 |          0 |
+|     (U_UART_PACKET_SENDER)          |      uart_packet_sender |          4 |          4 |       0 |    0 |  36 |      0 |      0 |          0 |
+|     U_BAUD_TICK_16                  |            baud_tick_16 |         13 |         13 |       0 |    0 |  25 |      0 |      0 |          0 |
+|     U_UART_TX                       |                 uart_tx |         34 |         34 |       0 |    0 |  20 |      0 |      0 |          0 |
+|   U_VGA_DECODER                     |             vga_decoder |         31 |         31 |       0 |    0 |  20 |      0 |      0 |          0 |
+|     U_HV_COUNTER                    |              hv_counter |         31 |         31 |       0 |    0 |  20 |      0 |      0 |          0 |
++-------------------------------------+-------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+
+

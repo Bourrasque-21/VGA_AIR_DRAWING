@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FPGA Air Drawing UI (F5)",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "${workspaceFolder}/../python_ui/.venv/Scripts/python.exe",
+      "program": "${workspaceFolder}/../python_ui/air_draw_ui.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/../python_ui",
+      "preLaunchTask": "Prepare python_ui venv"
+    }
+  ]
+}
