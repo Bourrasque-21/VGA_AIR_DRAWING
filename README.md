@@ -78,17 +78,17 @@ v1은 카메라 영상을 320×240 RGB565 프레임버퍼에 저장하고, 동�
 
 ```mermaid
 flowchart LR
-    CAM["OV7670<br/>RGB565"] --> CAP["카메라 수신<br/>SCCB · Pixel Capture"]
-    CAP --> FB["320×240 RGB565<br/>Frame Buffer"]
-    CAP --> TRACK["초록색 마커<br/>추적"]
-    TRACK --> DRAW["선 보간 · 브러시<br/>렌더링"]
-    DRAW --> CANVAS["320×240 4bit<br/>Canvas RAM"]
+    CAM["OV7670 RGB565"] --> CAP["카메라 수신 및 SCCB 제어"]
+    CAP --> FB["320×240 RGB565 Frame Buffer"]
+    CAP --> TRACK["초록색 마커 추적"]
+    TRACK --> DRAW["선 보간 및 브러시 렌더링"]
+    DRAW --> CANVAS["320×240 4bit Canvas RAM"]
     FB --> MUX["Overlay Pixel MUX"]
     CANVAS --> MUX
     MUX --> VGA["VGA 출력"]
     VGA --> PC["캡처카드 · PC UI"]
-    PC -.->|도구 설정| CFG["Pen Config Controller"]
-    CFG -.->|좌표 · 상태| PC
+    PC --> CFG["UART Pen Config Controller"]
+    CFG --> PC
     CFG --> DRAW
 ```
 
@@ -122,13 +122,13 @@ v1의 마커 좌표는 색상 판정, 3픽셀 침식, 바운딩박스 중심 계
 
 ```mermaid
 flowchart LR
-    PIX["RGB565 Pixel"] --> COLOR["Green Dominance<br/>Detector"]
-    COLOR --> ERODE["3-Pixel Horizontal<br/>Erosion"]
-    ERODE --> BBOX["Bounding Box<br/>Center"]
-    BBOX --> AVG["5-Frame<br/>Moving Average"]
-    AVG --> CTRL["Stroke<br/>Controller"]
-    CTRL --> BRES["Bresenham<br/>Interpolator"]
-    BRES --> BRUSH["Brush<br/>Renderer"]
+    PIX["RGB565 Pixel"] --> COLOR["Green Dominance Detector"]
+    COLOR --> ERODE["3-Pixel Horizontal Erosion"]
+    ERODE --> BBOX["Bounding Box Center"]
+    BBOX --> AVG["5-Frame Moving Average"]
+    AVG --> CTRL["Stroke Controller"]
+    CTRL --> BRES["Bresenham Interpolator"]
+    BRES --> BRUSH["Brush Renderer"]
     BRUSH --> RAM["4bit Canvas RAM"]
 ```
 
@@ -255,16 +255,16 @@ v1은 저장 해상도를 320×240으로 낮춰 문제를 해결했지만 BRAM�
 
 ```mermaid
 flowchart LR
-    CAM["OV7670<br/>640×480 RGB565"] --> CAP["Capture Frontend"]
-    CAP --> RING["640×64 RGB444<br/>Line Ring Buffer"]
-    CAP --> TRACK["Centroid Marker<br/>Tracker"]
+    CAM["OV7670 640×480 RGB565"] --> CAP["Capture Frontend"]
+    CAP --> RING["640×64 RGB444 Line Ring Buffer"]
+    CAP --> TRACK["Centroid Marker Tracker"]
     RING --> STREAM["VGA Line Streamer"]
-    TRACK --> CANVAS["320×240<br/>Canvas Pipeline"]
+    TRACK --> CANVAS["320×240 Canvas Pipeline"]
     CANVAS --> MIX["Video Compositor"]
     STREAM --> MIX
-    MIX --> HEADER["21bit Line Header<br/>Encoder"]
+    MIX --> HEADER["21bit Line Header Encoder"]
     HEADER --> VGA["VGA Capture"]
-    VGA --> REBUILD["Python 640×480<br/>Frame Reassembly"]
+    VGA --> REBUILD["Python 640×480 Frame Reassembly"]
 ```
 
 카메라 PCLK 도메인은 수신한 라인을 링버퍼 bank에 기록하고 `{source row, bank number}` descriptor만 64단 async FIFO로 전달함. VGA 도메인의 line streamer는 descriptor를 POP한 뒤 해당 bank에서 640픽셀을 읽음. 픽셀 전체가 아니라 주소 정보만 CDC 경로를 통과하므로 동기화 비용이 감소함.
