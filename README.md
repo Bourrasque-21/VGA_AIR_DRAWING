@@ -181,6 +181,14 @@ G - B >= 16
 
 마커가 사라지면 현재 스트로크를 종료함. 이후 다른 위치에서 다시 검출되더라도 이전 좌표와 새 좌표를 연결하지 않으므로 Pen Up 구간에 불필요한 선이 생성되지 않음.
 
+### 4.4 단계별 적용 결과
+
+마커 검출 결과에 브러시 렌더링과 좌표·선 연결 보정을 순차적으로 적용한 결과임. 이동평균과 Bresenham 보간을 추가한 후 마커 흔들림과 스트로크 단절이 감소함.
+
+| 기본 마커 검출 | 브러시 렌더링 적용 | 좌표·스트로크 보정 적용 |
+| :---: | :---: | :---: |
+| <img src="docs/tracking-stage-input.gif" width="230" alt="기본 마커 검출 결과"> | <img src="docs/tracking-stage-brush.gif" width="230" alt="브러시 렌더링 적용 결과"> | <img src="docs/tracking-stage-filtered.gif" width="230" alt="좌표와 스트로크 보정 적용 결과"> |
+
 ## 5. v1 구현 결과
 
 v1은 320×240 영상 프레임버퍼와 별도의 드로잉 캔버스를 BRAM에 구현함. Vivado 2020.2 implementation 결과는 다음과 같음.
