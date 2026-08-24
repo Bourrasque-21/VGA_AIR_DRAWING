@@ -1,155 +1,112 @@
-# UART 펜 설정 패킷 구조
+# UART 양방향 패킷 규격
 
-현재 UART 송신 패킷은 **프레임당 6바이트**입니다.
+PC UI와 FPGA는 115200 baud, 8N1 형식의 UART로 마커 좌표와 도구 설정을 교환함. FPGA는 프레임마다 현재 좌표와 실효 상태를 전송하고, PC는 사용자가 설정을 변경한 경우에만 제어 패킷을 전송함.
+
+| 방향 | 길이 | 전송 시점 | 내용 |
+| --- | ---: | --- | --- |
+| FPGA → PC | 6byte | 카메라 프레임당 1회 | 마커 좌표와 FPGA 실효 상태 |
+| PC → FPGA | 4byte | UI 설정 변경 시 | 도구·색상·배경·캡처 설정 |
+
+## 1. FPGA → PC 패킷
+
+`uart_packet_sender`는 카메라 `vsync`마다 좌표와 `pen_config_controller`의 실효 상태를 래치한 후 6byte 패킷을 전송함.
 
 ```text
-[0] 0xAA              // start byte
-[1] X_center[8:1]     // X 좌표, LSB 1비트 버림
-[2] Y_center[7:0]     // Y 좌표, 0~239 표현 가능
-[3] control           // 펜 설정 비트필드
-[4] texture_shape     // 펜 질감 모드 번호
-[5] 0x55              // end byte
+[0] 0xAA          start byte
+[1] X[8:1]        마커 X 좌표, LSB 1bit 제외
+[2] Y[7:0]        마커 Y 좌표
+[3] control       도구·굵기·색상·지우기 상태
+[4] state         캘리그래피/스프레이 모양·도화지·캡처 상태
+[5] 0x55          end byte
 ```
 
-수신 측 좌표 복원:
+PC에서 좌표를 복원하는 방식은 다음과 같음.
 
 ```text
 x = packet[1] << 1
 y = packet[2]
 ```
 
-`control` 바이트 구조:
+### `control` byte
 
 ```text
-bit[7] sw_texture_enable
-bit[6] sw_eraser
-bit[5] sw_size
-bit[4] sw_paint_red
-bit[3] sw_paint_green
-bit[2] sw_paint_blue
-bit[1] clear_btn
-bit[0] reserved, 0
+bit[7] texture_enable
+bit[6] eraser
+bit[5] size
+bit[4] red
+bit[3] green
+bit[2] blue
+bit[1] clear
+bit[0] reserved = 0
 ```
 
-`texture_shape` 값:
+### `state` byte
 
 ```text
-0: spray small
-1: spray medium
-2: spray large
-3: diagonal thin
-4: diagonal wide
+bit[7:5] reserved = 0
+bit[4]   freeze
+bit[3]   paper
+bit[2:0] texture_shape
 ```
 
-UART 설정:
+## 2. PC → FPGA 패킷
+
+PC UI는 도구 설정이 변경된 경우 `uart_packet_decoder`로 4byte 패킷을 전송함.
 
 ```text
-baud rate: 115200
-format: 8N1
-packet bits: 6 bytes * 10 bits = 60 bits
-packet time: 약 0.521 ms
-30 fps frame time: 약 33.33 ms
+[0] 0xA5          start byte
+[1] control       도구·굵기·색상·지우기 명령
+[2] state         캘리그래피/스프레이 모양·도화지·캡처 명령
+[3] 0x5A          end byte
 ```
 
-30fps 기준 한 프레임 안에 6바이트 전송은 충분히 여유가 있습니다.
+`control`과 `state`의 비트 배치는 FPGA → PC 패킷과 동일함. 수신한 값은 패킷 검사가 완료된 경우에만 `pen_config_controller`에 전달됨.
 
-## 포함 파일
+종료 바이트가 `0x5A`가 아니면 패킷 전체를 폐기함. 바이트 사이의 간격이 3byte 전송 시간을 초과하면 현재 수신 상태를 초기화하고 다음 `0xA5`를 대기함.
 
-이 번들은 기존 VGA 프로젝트에 덮어씌우거나 비교 적용하기 위한 변경/추가 파일 묶음입니다.
+## 3. 도구 모양 값
+
+| `texture_shape` | 도구 | 굵기 |
+| ---: | --- | --- |
+| 0 | 스프레이 | 작게 |
+| 1 | 스프레이 | 중간 |
+| 2 | 스프레이 | 크게 |
+| 3 | 캘리그래피 | 얇게 |
+| 4 | 캘리그래피 | 굵게 |
+
+일반 볼펜은 `texture_enable=0`, 지우개는 `eraser=1`로 선택함. `size`는 볼펜과 지우개의 2단계 굵기에 사용되며, 스프레이와 캘리그래피에서는 `texture_shape` 값과 함께 갱신됨.
+
+## 4. 상태 동기화
+
+`pen_config_controller`가 도구 상태의 단일 소유자로 동작함. PC 명령과 물리 버튼 입력을 같은 상태 레지스터에 반영하며, 같은 clock에 두 입력이 겹치면 물리 버튼을 우선함.
+
+FPGA는 적용된 실효 상태를 다음 FPGA → PC 패킷으로 다시 전송함. PC UI는 자신이 송신한 값을 즉시 확정하지 않고 FPGA가 echo한 상태로 화면을 갱신하므로 보드와 UI의 표시가 일치함.
+
+## 5. UART 설정 및 전송 시간
 
 ```text
-sources_1/imports/rtl/top_VGA.sv
-sources_1/imports/rtl/canvas_buffer.sv
-sources_1/imports/rtl/brush_draw_engine.sv
-sources_1/imports/rtl/circular_brush_renderer.sv
-sources_1/imports/rtl/uart_packet_sender.sv
-sources_1/imports/rtl/uart_tx.sv
-sources_1/imports/rtl/baud_tick_16oversample.v
-constrs_1/imports/constraints/Basys-3-Master.xdc
-project_reference/VGA_0713_ver1.xpr
+baud rate : 115200
+format    : 8N1
+6byte TX  : 60bit / 115200 ≈ 0.521 ms
+4byte RX  : 40bit / 115200 ≈ 0.347 ms
 ```
 
-`project_reference/VGA_0713_ver1.xpr`는 현재 Vivado 프로젝트 파일의 참조본입니다. 다른 프로젝트에 합칠 때는 XPR을 그대로 쓰기보다 RTL 파일을 sources에 추가하는 쪽이 안전합니다.
+6byte 상태 패킷의 전송 시간은 30fps 기준 한 프레임 시간인 약 33.33ms보다 짧으므로 프레임당 1회 전송에 충분한 여유가 있음.
 
-## Top 연결 요약
+## 6. 관련 RTL
 
-`top_VGA.sv`에 UART TX 출력이 추가되었습니다.
+| 모듈 | 역할 |
+| --- | --- |
+| `uart_packet_sender.sv` | 좌표와 실효 상태를 6byte 패킷으로 변환함 |
+| `uart_packet_decoder.sv` | PC의 4byte 패킷을 검사하고 설정값을 복원함 |
+| `uart_tx.sv` | UART byte 송신을 수행함 |
+| `uart_rx.sv` | UART byte 수신을 수행함 |
+| `baud_tick_16oversample.v` | 송수신 baud tick을 생성함 |
+| `pen_config_controller.sv` | UART와 물리 버튼의 상태를 통합함 |
 
-```systemverilog
-output logic tx
-```
-
-`canvas_buffer_top`에서 필터링된 좌표와 현재 질감 모드를 top으로 내보냅니다.
-
-```systemverilog
-.X_center         (X_center_o),
-.Y_center         (Y_center_o),
-.pen_texture_shape(pen_texture_shape_o)
-```
-
-`uart_packet_sender`는 `clk_100`에서 동작하며, `vsync` rising edge를 동기화해서 프레임당 한 번 패킷을 전송합니다.
-
-## 핀/스위치 매핑
-
-UART TX:
+Basys 3 USB-UART 핀은 다음과 같이 연결됨.
 
 ```text
-tx -> Basys3 USB-RS232 TX, PACKAGE_PIN A18
+RX: PACKAGE_PIN B18
+TX: PACKAGE_PIN A18
 ```
-
-펜 질감 스위치:
-
-```text
-SW5 / V15: sw_texture_enable
-SW6 / W14: sw_texture_shape_up
-SW7 / W13: sw_texture_shape_down
-```
-
-기존 펜 설정:
-
-```text
-sw_paint_red
-sw_paint_green
-sw_paint_blue
-sw_eraser
-sw_size
-clear_btn
-```
-
-## 펜 질감 기능
-
-기존 원형 브러시 외에 질감 모드가 켜져 있을 때 다음 5개 모드를 순환합니다.
-
-```text
-0: 스프레이 작게
-1: 스프레이 중간
-2: 스프레이 크게
-3: 대각 직사각형 얇게
-4: 대각 직사각형 굵게
-```
-
-별, 삼각형, 스마일 모드는 제거했습니다.
-
-## UART 모듈 구성
-
-다운로드 폴더의 UART 패키지에서 아래 2개 파일만 사용합니다.
-
-```text
-uart_tx.sv
-baud_tick_16oversample.v
-```
-
-`uart_top.sv`와 `uart_rx.sv`는 이번 송신 전용 패킷 구조에는 사용하지 않습니다. `uart_top.sv`는 RX/FIFO echo 구조이고, 원본 패키지에 필요한 `fifo`, `baud_gen` 파일이 포함되어 있지 않아 제외했습니다.
-
-새로 추가한 `uart_packet_sender.sv`가 좌표/펜 설정을 패킷으로 만들어 `uart_tx`에 한 바이트씩 넣습니다.
-
-## 검증 결과
-
-현재 작업본 기준으로 다음 검증을 통과했습니다.
-
-```text
-xvlog -sv 전체 RTL 문법 체크 통과
-Vivado synth_design -rtl -top top_VGA 통과
-0 Warnings, 0 Critical Warnings, 0 Errors
-```
-
