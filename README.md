@@ -87,7 +87,8 @@ flowchart LR
     CANVAS --> MUX
     MUX --> VGA["VGA 출력"]
     VGA --> PC["캡처카드 · PC UI"]
-    PC <-. "UART 115200 8N1" .-> CFG["Pen Config Controller"]
+    PC -.->|도구 설정| CFG["Pen Config Controller"]
+    CFG -.->|좌표 · 상태| PC
     CFG --> DRAW
 ```
 
@@ -171,7 +172,7 @@ G - B >= 16
 | --- | --- |
 | 볼펜 | `dx² + dy² <= threshold`인 원형 영역을 채움 |
 | 스프레이 | 원형 영역 안에서 좌표 hash와 density 조건을 만족하는 픽셀만 기록함 |
-| 캘리그래피 | `|dy-dx| <= width` 조건을 만족하는 사선 영역을 기록함 |
+| 캘리그래피 | `\|dy-dx\| <= width` 조건을 만족하는 사선 영역을 기록함 |
 | 지우개 | 원형 마스크 범위의 `valid` 값을 0으로 기록함 |
 
 <p align="center">
