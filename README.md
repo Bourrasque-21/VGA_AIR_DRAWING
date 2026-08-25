@@ -1,4 +1,6 @@
-# VGA Air Drawing
+<p align="center">
+  <img src="docs/Air_Drawing_GitHub_Banner.png" width="900" alt="VGA Air Drawing">
+</p>
 
 본 프로젝트는 OV7670 카메라로 초록색 마커를 추적하고, 허공에서 생성된 궤적을 Basys 3 FPGA 내부에서 카메라 영상과 실시간으로 합성하도록 구현한 시스템임. 펜 좌표 검출, 선 보간, 브러시 렌더링 및 영상 합성은 FPGA에서 수행하며, PC 프로그램은 결과 표시와 도구 설정 및 이미지 저장을 담당함.
 
