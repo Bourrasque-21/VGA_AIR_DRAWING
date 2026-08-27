@@ -271,10 +271,10 @@ flowchart LR
 
 카메라 PCLK 도메인은 수신한 라인을 링버퍼 bank에 기록하고 `{source row, bank number}` descriptor만 64단 async FIFO로 전달함. VGA 도메인의 line streamer는 descriptor를 POP한 뒤 해당 bank에서 640픽셀을 읽음. 픽셀 전체가 아니라 주소 정보만 CDC 경로를 통과하므로 동기화 비용이 감소함.
 
-라인 데이터는 VGA display area에서 출력하고, 다음 라인 주소는 수평 porch 구간에서 전달함. 화면에 표시되지 않는 블랭킹 시간을 제어 경로에 사용하여 영상 출력과 descriptor 처리가 겹치지 않도록 구성함.
+라인 영상과 21bit 전송 헤더는 VGA display area에서 출력함. 첫 번째 복제 행은 `x=0~639` 전체에 영상을 출력하고, 두 번째 복제 행은 `x=0~618`에 영상, `x=619~639`에 라인 헤더를 기록함. 수평 porch에서는 PC로 전송할 영상 payload를 출력하지 않으며, `x=799`에서 async FIFO의 다음 descriptor를 읽어 VGA 도메인의 라인 상태를 갱신함.
 
 <p align="center">
-  <img src="docs/async_fifo.png" width="720" alt="Display Area와 Porch를 분리한 라인 데이터 및 descriptor 전달">
+  <img src="docs/async_fifo_corrected.png" width="720" alt="VGA 유효 표시 구간의 영상 및 21bit 헤더와 porch의 내부 descriptor load">
 </p>
 
 ### 7.3 21bit 라인 헤더와 PC 프레임 재조립
