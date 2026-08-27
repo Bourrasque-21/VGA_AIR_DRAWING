@@ -250,7 +250,7 @@ v1은 저장 해상도를 320×240으로 낮춰 문제를 해결했지만 BRAM�
 ![풀 프레임버퍼와 64라인 링버퍼 비교](docs/full-frame-vs-ring.png)
 
 <p align="center">
-  <img src="docs/resource_comp.png" width="760" alt="풀 프레임버퍼와 64라인 링버퍼의 메모리 사용량 비교">
+  <img src="docs/resourse_compare_drei.png" width="900" alt="320×240 프레임버퍼와 320×240 및 640×480 링버퍼의 FPGA 리소스 사용률 비교">
 </p>
 
 ### 7.2 라인 저장과 Clock Domain Crossing
@@ -274,7 +274,7 @@ flowchart LR
 라인 영상과 21bit 전송 헤더는 VGA display area에서 출력함. 첫 번째 복제 행은 `x=0~639` 전체에 영상을 출력하고, 두 번째 복제 행은 `x=0~618`에 영상, `x=619~639`에 라인 헤더를 기록함. 수평 porch에서는 PC로 전송할 영상 payload를 출력하지 않으며, `x=799`에서 async FIFO의 다음 descriptor를 읽어 VGA 도메인의 라인 상태를 갱신함.
 
 <p align="center">
-  <img src="docs/async_fifo_corrected.png" width="720" alt="VGA 유효 표시 구간의 영상 및 21bit 헤더와 porch의 내부 descriptor load">
+  <img src="docs/async_fifo_portfolio.png" width="900" alt="VGA 유효 표시 구간의 영상 및 21bit 헤더와 링버퍼 descriptor 전달 구조">
 </p>
 
 ### 7.3 21bit 라인 헤더와 PC 프레임 재조립
