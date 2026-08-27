@@ -329,6 +329,7 @@ v2 implementation의 WNS는 **+1.519 ns**, WHS는 **+0.023 ns**이며 실패 엔
 - [v1 CAPTURE/SAVE 구현 노트](v1-framebuffer/README_KR.md)
 - [UART 패킷 규격](v1-framebuffer/vga_uart_project/vga_uart_project.srcs/README_KR.md)
 - [v2 초기 설계 문서](backup/README.md) — 초기 RTL 구성과 드로잉 엔진 구조
+- [128라인 링버퍼 선행 설계](https://github.com/Bourrasque-21/VGA_AIRDRAW) — 720p 60Hz 전송, 128라인 탄성 버퍼 및 240라인 청크 기반 PC 프레임 재조립 구조
 - [v2 상세 설계 문서](v2-line-header/README.md) — 모듈별 동작, 클록 계산, 라인 헤더 규격 및 프레임 재조립 순서
 - [`full-frame-vs-line-ring.html`](v2-line-header/visualization/full-frame-vs-line-ring.html) — 프레임버퍼와 라인 링버퍼의 단계별 동작 비교
 - [`green-centroid-tracker.html`](v2-line-header/visualization/green-centroid-tracker.html) — 바운딩박스 중심과 센트로이드 추적 비교
